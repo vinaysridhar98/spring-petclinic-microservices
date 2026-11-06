@@ -17,6 +17,7 @@ package org.springframework.samples.petclinic.customers.web;
 
 import io.micrometer.core.annotation.Timed;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.PutMapping;
 import jakarta.validation.constraints.Min;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,5 +89,18 @@ class OwnerResource {
         ownerEntityMapper.map(ownerModel, ownerRequest);
         log.info("Saving owner {}", ownerModel);
         ownerRepository.save(ownerModel);
+    }
+
+    @PutMapping("/{ownerId}/reward-points")
+    @ResponseStatus(HttpStatus.OK)
+    public Owner updateRewardPoints(
+        @PathVariable("ownerId") int ownerId,
+        @Valid @RequestBody RewardPointRequest request) {
+
+        Owner owner = ownerRepository.findById(ownerId)
+            .orElseThrow(() -> new IllegalArgumentException("Owner with ID " + ownerId + " not found"));
+
+        owner.addRewardPoints(request.pointsToAdd());
+        return ownerRepository.save(owner);
     }
 }

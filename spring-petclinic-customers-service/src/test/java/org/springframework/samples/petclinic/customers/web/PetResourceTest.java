@@ -3,6 +3,13 @@ package org.springframework.samples.petclinic.customers.web;
 import java.time.LocalDate;
 import java.util.Optional;
 
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -12,6 +19,7 @@ import org.springframework.samples.petclinic.customers.model.OwnerRepository;
 import org.springframework.samples.petclinic.customers.model.Pet;
 import org.springframework.samples.petclinic.customers.model.PetRepository;
 import org.springframework.samples.petclinic.customers.model.PetType;
+import org.springframework.samples.petclinic.customers.web.mapper.OwnerEntityMapper;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,6 +39,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 /**
  * @author Maciej Szarlinski
  */
+//@WebMvcTest({PetResource.class, OwnerResource.class})
 @WebMvcTest(PetResource.class)
 @ActiveProfiles("test")
 class PetResourceTest {
@@ -38,11 +47,16 @@ class PetResourceTest {
     @Autowired
     MockMvc mvc;
 
-    @MockitoBean
-    PetRepository petRepository;
 
     @MockitoBean
-    OwnerRepository ownerRepository;
+    private PetRepository petRepository;
+
+    @MockitoBean
+    private OwnerRepository ownerRepository;
+
+    @MockitoBean
+    private OwnerEntityMapper ownerEntityMapper;
+
 
     @Test
     void shouldGetAPetInJSonFormat() throws Exception {
@@ -162,4 +176,5 @@ class PetResourceTest {
         owner.addPet(pet);
         return pet;
     }
+
 }

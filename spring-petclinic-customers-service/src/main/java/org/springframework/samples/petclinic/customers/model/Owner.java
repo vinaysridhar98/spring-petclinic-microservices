@@ -63,6 +63,9 @@ public class Owner {
     @Digits(fraction = 0, integer = 12)
     private String telephone;
 
+    @Column(name = "reward_points")
+    private int rewardPoints = 0;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "owner")
     private Set<Pet> pets;
 
@@ -82,6 +85,20 @@ public class Owner {
     public void addPet(Pet pet) {
         getPetsInternal().add(pet);
         pet.setOwner(this);
+    }
+
+    public int getRewardPoints() {
+        return rewardPoints;
+    }
+
+    public void setRewardPoints(int rewardPoints) {
+        this.rewardPoints = rewardPoints;
+    }
+
+    public void addRewardPoints(int points) {
+        if (points > 0) {
+            this.rewardPoints += points;
+        }
     }
 
     @Override
